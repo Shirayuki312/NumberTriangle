@@ -152,25 +152,35 @@ public class NumberTriangle {
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
 
 
-        // TODO define any variables that you want to use to store things
-
-        // will need to return the top of the NumberTriangle,
-        // so might want a variable for that.
-        NumberTriangle top = null;
-
+        java.util.Vector<String> lines = new java.util.Vector<>();
         String line = br.readLine();
         while (line != null) {
-
-            // remove when done; this line is included so running starter code prints the contents of the file
-            System.out.println(line);
-
-            // TODO process the line
-
-            //read the next line
+            line = line.trim();
+            if (!line.isEmpty()) {
+                System.out.println(line);
+                lines.add(line);
+            }
             line = br.readLine();
         }
         br.close();
-        return top;
+
+        int height = lines.size();
+        NumberTriangle[][] nodes = new NumberTriangle[height][];
+
+        for (int i = 0; i < height; i++) {
+            String[] parts = lines.get(i).split("\\s+");
+            nodes[i] = new NumberTriangle[parts.length];
+            for (int j = 0; j < parts.length; j++) {
+                nodes[i][j] = new NumberTriangle(Integer.parseInt(parts[j]));
+            }
+        }
+        for (int i = 0; i < height - 1; i++) {
+            for (int j = 0; j < nodes[i].length; j++) {
+                nodes[i][j].setLeft(nodes[i + 1][j]);
+                nodes[i][j].setRight(nodes[i + 1][j + 1]);
+            }
+        }
+        return nodes[0][0];
     }
 
     public static void main(String[] args) throws IOException {
