@@ -63,7 +63,31 @@ public class NumberTriangle {
      * Note: a NumberTriangle contains at least one value.
      */
     public void maxSumPath() {
-        // for fun [not for credit]:
+        if (isLeaf()) {
+            return;
+        }
+
+        int leftSum = Integer.MIN_VALUE;
+        int rightSum = Integer.MIN_VALUE;
+
+        // Recursively compute max sum for left child
+        if (left != null) {
+            left.maxSumPath();
+            leftSum = left.root;
+        }
+
+        // Recursively compute max sum for right child
+        if (right != null) {
+            right.maxSumPath();
+            rightSum = right.root;
+        }
+
+        // Update this node’s root to max path sum
+        root = root + Math.max(leftSum, rightSum);
+
+        // After computing, collapse into a leaf
+        left = null;
+        right = null;
     }
 
 
@@ -88,8 +112,26 @@ public class NumberTriangle {
      *
      */
     public int retrieve(String path) {
-        // TODO implement this method
-        return -1;
+        if (path.isEmpty()) {
+            return this.root;
+        }
+
+        // Take the first step of the path
+        char step = path.charAt(0);
+
+        if (step == 'l') {
+            if (left == null) {
+                throw new IllegalArgumentException("Invalid path: no left child");
+            }
+            return left.retrieve(path.substring(1));
+        } else if (step == 'r') {
+            if (right == null) {
+                throw new IllegalArgumentException("Invalid path: no right child");
+            }
+            return right.retrieve(path.substring(1));
+        } else {
+            throw new IllegalArgumentException("Invalid character in path: " + step);
+        }
     }
 
     /** Read in the NumberTriangle structure from a file.
